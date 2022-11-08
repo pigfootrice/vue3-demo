@@ -7,7 +7,10 @@
     <!-- query -->
     <div class="query-box">
       <el-input v-model="queryInput" placeholder="请输入姓名搜索🔍" />
-      <el-button type="primary" @click="handleAdd">增加</el-button>
+      <div class="btn">
+        <el-button type="primary" @click="handleAdd">增加</el-button>
+        <el-button type="danger" @click="handerDelList" v-if="multipleSelection.length > 0">删除多选</el-button>
+      </div>
     </div>
     <!-- table -->
     <el-table 
@@ -88,6 +91,8 @@ let tableForm = $ref({
 let dialogType = $ref("add")
 
 // 方法
+
+// 删除一条
 const handleRowDelete = ({id}) => {
   // 1. 通过id获取到条目对应的索引值
   let index = tableData.findIndex(item => item.id === id)
@@ -95,15 +100,21 @@ const handleRowDelete = ({id}) => {
   tableData.splice(index, 1)
 }
 
+//  选中
 const handleSelectionChange = (val) => {
-  multipleSelection = val
+  // multipleSelection = val
+  multipleSelection = []
+  val.forEach(item => {
+    multipleSelection.push(item.id)
+  });
 }
 
+// 新增
 const handleAdd = () => {
   dialogFormVisible = true   // 打开弹窗
   tableForm = {}
 }
-
+// 确认
 const dialogConfirm = () => {
   dialogFormVisible = false   // 关闭弹窗
   // 1. 拿到数据
@@ -114,6 +125,13 @@ const dialogConfirm = () => {
     ...tableForm
   })
   console.log(tableData);
+}
+
+const handerDelList = () => {
+  multipleSelection.forEach(id => {
+    handleRowDelete({id})
+  })
+  multipleSelection = ''
 }
 </script>
 
