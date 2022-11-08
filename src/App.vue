@@ -31,7 +31,7 @@
         <template #default="scope">
           <el-button link type="primary" size="small" 
           @click="handleRowDelete(scope.row)" style="color:red;" >删除</el-button>
-          <el-button link type="primary" size="small">编辑</el-button>
+          <el-button link type="primary" size="small" @click="handleEdit(scope.row)">编辑</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -66,6 +66,7 @@
 </template>
 
 <script setup>
+import { transform } from 'lodash';
 import { ref } from 'vue'
 //  数据
 let queryInput = $ref("")
@@ -119,19 +120,34 @@ const dialogConfirm = () => {
   dialogFormVisible = false   // 关闭弹窗
   // 1. 拿到数据
 
-  // 2. 添加到table
-  tableData.push({
-    id:(tableData.length + 1).toString(),
-    ...tableForm
-  })
-  console.log(tableData);
+  // 判断是新增还是编辑
+  if (dialogType === 'add') {
+    // 2. 添加到table
+    tableData.push({
+      id: (tableData.length + 1).toString(),
+      ...tableForm
+    })
+  } else {
+    // 1.获取当前索引
+    let index = tableData.findIndex(item => item.id === tableForm.id)
+    // 2. 替换当前索引值对应的data
+    tableData[index] = tableForm
+  }
 }
 
+// 删除多选功能
 const handerDelList = () => {
   multipleSelection.forEach(id => {
     handleRowDelete({id})
   })
   multipleSelection = ''
+}
+
+// 编辑功能
+const handleEdit = (row) => {
+  dialogFormVisible = true
+  dialogType = 'edit'
+  tableForm = {...row}
 }
 </script>
 
