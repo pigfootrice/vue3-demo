@@ -6,7 +6,7 @@
     </div>
     <!-- query -->
     <div class="query-box">
-      <el-input v-model="queryInput" placeholder="请输入姓名搜索🔍" />
+      <el-input v-model="queryInput" placeholder="请输入姓名搜索🔍" @input="handleQueryName"/>
       <div class="btn">
         <el-button type="primary" @click="handleAdd">增加</el-button>
         <el-button type="danger" @click="handerDelList" v-if="multipleSelection.length > 0">删除多选</el-button>
@@ -73,13 +73,30 @@ let queryInput = $ref("")
 let tableData = $ref([
   {
     id:'1',
-    name: 'Tom',
+    name: 'Tom1',
     email:'123@qq.com',
     state: 'California',
     phone:'15572888613',
     address: 'No. 189, Grove St, Los Angeles',
   },
+  {
+    id: '2',
+    name: 'Tom2',
+    email: '123@qq.com',
+    state: 'California',
+    phone: '15572888613',
+    address: 'No. 189, Grove St, Los Angeles',
+  },
+  {
+    id: '3',
+    name: 'Tom3',
+    email: '123@qq.com',
+    state: 'California',
+    phone: '15572888613',
+    address: 'No. 189, Grove St, Los Angeles',
+  },
 ])
+let tableDataCopy = Object.assign(tableData)
 let multipleSelection = $ref([])
 let dialogFormVisible = $ref(false)
 let tableForm = $ref({
@@ -92,6 +109,18 @@ let tableForm = $ref({
 let dialogType = $ref("add")
 
 // 方法
+
+// 搜索
+const handleQueryName = (val) => {
+  // console.log(val);
+  if (val.length > 0) {
+    tableData = tableData.filter(item => (item.name).toLowerCase().match(val.toLowerCase()))
+  } else {
+    tableData = tableDataCopy
+  }
+
+  
+}
 
 // 删除一条
 const handleRowDelete = ({id}) => {
